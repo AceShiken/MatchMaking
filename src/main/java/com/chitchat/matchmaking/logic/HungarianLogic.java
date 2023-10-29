@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class HungarianLogic {
     private static final int UNASSIGNED = -1;
 
-    public static int[] getOptimizedMatches(int[][] costMatrix) {
+    public static int[] getOptimizedMatches(double[][] costMatrix) {
         int numRows = costMatrix.length;
         int numCols = costMatrix[0].length;
 
@@ -17,7 +17,7 @@ public class HungarianLogic {
 
         // Step 1: Subtract the minimum value from each row.
         for (int row = 0; row < numRows; row++) {
-            int minVal = Integer.MAX_VALUE;
+            double minVal = Integer.MAX_VALUE;
             for (int col = 0; col < numCols; col++) {
                 if (costMatrix[row][col] < minVal) {
                     minVal = costMatrix[row][col];
@@ -30,7 +30,7 @@ public class HungarianLogic {
 
         // Step 2: Subtract the minimum value from each column.
         for (int col = 0; col < numCols; col++) {
-            int minVal = Integer.MAX_VALUE;
+            double minVal = Integer.MAX_VALUE;
             for (int row = 0; row < numRows; row++) {
                 if (costMatrix[row][col] < minVal) {
                     minVal = costMatrix[row][col];
@@ -62,7 +62,7 @@ public class HungarianLogic {
                 }
             }
             if (!pathFound) {
-                int minUncovered = Integer.MAX_VALUE;
+                double minUncovered = Integer.MAX_VALUE;
                 for (int row = 0; row < numRows; row++) {
                     if (rowCover[row] == 0) {
                         for (int col = 0; col < numCols; col++) {
