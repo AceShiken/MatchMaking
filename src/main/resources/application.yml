@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: match-making
+# Mongo Config
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: chitchat
+
+server:
+  port: 8100
+
+http:
+  auth:
+    tokenValue: gibberish
+    tokenHeader: X-API-KEY

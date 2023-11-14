@@ -3,6 +3,7 @@ package com.chitchat.matchmaking.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.sql.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Battle {
+    @Id
     private int id;
     private String name;
     private boolean isTournament;
