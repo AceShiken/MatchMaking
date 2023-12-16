@@ -1,7 +1,8 @@
 package com.chitchat.matchmaking.service;
 
-import com.chitchat.matchmaking.dao.BattleDao;
+import com.chitchat.matchmaking.dto.requests.BattleDto;
 import com.chitchat.matchmaking.exceptions.InvalidRequestException;
+import com.chitchat.matchmaking.mapper.DtoToEntityMapper;
 import com.chitchat.matchmaking.models.Battle;
 import com.chitchat.matchmaking.models.ParticipationInfo;
 import com.chitchat.matchmaking.repository.BattleRepository;
@@ -16,13 +17,13 @@ import java.util.Optional;
 public class BattleService {
 
     @Autowired
-    private BattleDao battleDao;
-
-    @Autowired
     private BattleRepository battleRepository;
 
     @Autowired
     private ParticipationInfoRepository participationInfoRepository;
+
+    @Autowired
+    private DtoToEntityMapper dtoToEntityMapper;
 
     public Battle getBattle(int id) throws InvalidRequestException {
         Optional<Battle> optionalBattle = battleRepository.findById(id);
@@ -45,11 +46,11 @@ public class BattleService {
         return optionalParticipationInfo.get();
     }
 
-    public Battle createBattle(Battle battle) {
-        return battleRepository.insert(battle);
+    public Battle createBattle(BattleDto battle) {
+        return battleRepository.insert(dtoToEntityMapper.convertToEntity(battle));
     }
 
-    public Battle updateBattle(Battle battle) {
-        return battleRepository.save(battle);
+    public Battle updateBattle(BattleDto battle) {
+        return battleRepository.save(dtoToEntityMapper.convertToEntity(battle));
     }
 }

@@ -3,6 +3,7 @@ package com.chitchat.matchmaking.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -17,7 +18,7 @@ import java.util.List;
 @Document(collection = "battle")
 public class Battle {
     @Indexed
-    @MongoId
+    @Id
     private int id;
     @Field(name = "name")
     private String name;

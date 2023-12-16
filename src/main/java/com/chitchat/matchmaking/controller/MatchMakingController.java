@@ -1,6 +1,9 @@
 package com.chitchat.matchmaking.controller;
 
+import com.chitchat.matchmaking.dto.requests.BattleDto;
 import com.chitchat.matchmaking.dto.requests.FraudIntensityRequest;
+import com.chitchat.matchmaking.dto.requests.GameDto;
+import com.chitchat.matchmaking.dto.requests.UpdateUserRewardsRequest;
 import com.chitchat.matchmaking.exceptions.InvalidRequestException;
 import com.chitchat.matchmaking.models.*;
 import com.chitchat.matchmaking.service.BattleService;
@@ -13,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/api/mm")
+@RestController
+@RequestMapping("/api/mm")
 public class MatchMakingController {
 
+    public static final String COUNTRY_CODE = "countrycode";
     @Autowired
     private BattleService battleService;
 
@@ -26,99 +31,99 @@ public class MatchMakingController {
     private GameService gameService;
 
     @GetMapping(value = "/battles/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Battle getBattle(HttpHeaders headers,
+    public Battle getBattle(@RequestHeader HttpHeaders headers,
                             @PathVariable int id) throws InvalidRequestException {
-        String countryCode = headers.getFirst("countryCode");
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return battleService.getBattle(id);
     }
 
     @GetMapping(value = "/battles/all/{gameId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Battle> getAllBattles(HttpHeaders headers,
+    public List<Battle> getAllBattles(@RequestHeader HttpHeaders headers,
                                   @PathVariable int gameId) {
-        String countryCode = headers.getFirst("countryCode");
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return battleService.getAllBattles(gameId);
     }
 
     @GetMapping(value = "/battles/{id}/participation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ParticipationInfo getBattleParticipationInfo(HttpHeaders headers,
+    public ParticipationInfo getBattleParticipationInfo(@RequestHeader HttpHeaders headers,
                                                         @PathVariable int id) throws InvalidRequestException {
-        String countryCode = headers.getFirst("countryCode");
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return battleService.getBattleParticipationInfo(id);
     }
 
     @PostMapping(value = "/battles/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Battle createBattle(HttpHeaders headers, @RequestBody Battle battle) {
-        String countryCode = headers.getFirst("countryCode");
+    public Battle createBattle(@RequestHeader HttpHeaders headers, @RequestBody BattleDto battle) {
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return battleService.createBattle(battle);
     }
 
     @PostMapping(value = "/battles/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Battle updateBattle(HttpHeaders headers, @RequestBody Battle battle) {
-        String countryCode = headers.getFirst("countryCode");
+    public Battle updateBattle(@RequestHeader HttpHeaders headers, @RequestBody BattleDto battle) {
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return battleService.updateBattle(battle);
     }
 
     @GetMapping(value = "/user/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public User getUser(HttpHeaders headers,
+    public User getUser(@RequestHeader HttpHeaders headers,
                         @PathVariable int id) throws InvalidRequestException {
-        String countryCode = headers.getFirst("countryCode");
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return userService.getUser(id);
     }
 
     @GetMapping(value = "/user/{id}/fraudInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserFraud getUserFraudInfo(HttpHeaders headers,
+    public UserFraud getUserFraudInfo(@RequestHeader HttpHeaders headers,
                                       @PathVariable int id) throws InvalidRequestException {
-        String countryCode = headers.getFirst("countryCode");
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return userService.getUserFraudInfo(id);
     }
 
     @GetMapping(value = "/user/{id}/rewards/{battleId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserRewards getUserRewards(HttpHeaders headers,
+    public UserRewards getUserRewards(@RequestHeader HttpHeaders headers,
                                       @PathVariable int id,
                                       @PathVariable int battleId) throws InvalidRequestException {
-        String countryCode = headers.getFirst("countryCode");
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return userService.getUserRewards(id, battleId);
     }
 
     @PostMapping(value = "/user/{id}/enterFraud", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserFraud enterFraud(HttpHeaders headers,
+    public UserFraud enterFraud(@RequestHeader HttpHeaders headers,
                                 @PathVariable int id,
                                 @RequestBody FraudIntensityRequest fraudIntensityRequest) {
-        String countryCode = headers.getFirst("countryCode");
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return userService.enterFraud(id, fraudIntensityRequest);
     }
 
     @PostMapping(value = "/user/{id}/rewards/{battleId}/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserRewards updateUserRewards(HttpHeaders headers,
+    public UserRewards updateUserRewards(@RequestHeader HttpHeaders headers,
                                          @PathVariable int id,
                                          @PathVariable int battleId,
-                                         @RequestBody UserRewards userRewards) throws InvalidRequestException {
-        String countryCode = headers.getFirst("countryCode");
+                                         @RequestBody UpdateUserRewardsRequest userRewards) throws InvalidRequestException {
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return userService.updateUserRewards(id, battleId, userRewards);
     }
 
     @GetMapping(value = "/games/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Game getGame(HttpHeaders headers,
+    public Game getGame(@RequestHeader HttpHeaders headers,
                         @PathVariable int id) throws InvalidRequestException {
-        String countryCode = headers.getFirst("countryCode");
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return gameService.getGame(id);
     }
 
     @GetMapping(value = "/games/all", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Game> getAllGames(HttpHeaders headers) {
-        String countryCode = headers.getFirst("countryCode");
+    public List<Game> getAllGames(@RequestHeader HttpHeaders headers) {
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return gameService.getAllGames();
     }
 
     @PostMapping(value = "/games/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Game createGame(HttpHeaders headers, @RequestBody Game game) {
-        String countryCode = headers.getFirst("countryCode");
+    public Game createGame(@RequestHeader HttpHeaders headers, @RequestBody GameDto game) {
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return gameService.createGame(game);
     }
 
     @PostMapping(value = "/games/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Game updateGame(HttpHeaders headers, @RequestBody Game game) {
-        String countryCode = headers.getFirst("countryCode");
+    public Game updateGame(@RequestHeader HttpHeaders headers, @RequestBody GameDto game) {
+        String countryCode = headers.getFirst(COUNTRY_CODE);
         return gameService.updateGame(game);
     }
 }

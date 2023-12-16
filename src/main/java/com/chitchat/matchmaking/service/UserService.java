@@ -1,6 +1,7 @@
 package com.chitchat.matchmaking.service;
 
 import com.chitchat.matchmaking.dto.requests.FraudIntensityRequest;
+import com.chitchat.matchmaking.dto.requests.UpdateUserRewardsRequest;
 import com.chitchat.matchmaking.exceptions.InvalidRequestException;
 import com.chitchat.matchmaking.models.User;
 import com.chitchat.matchmaking.models.UserFraud;
@@ -56,7 +57,7 @@ public class UserService {
                 new Date(System.currentTimeMillis() + (long) fraudIntensityRequest.getTimeInHours() *60*60*1000)));
     }
 
-    public UserRewards updateUserRewards(int userId, int battleId, UserRewards userRewards) throws InvalidRequestException {
+    public UserRewards updateUserRewards(int userId, int battleId, UpdateUserRewardsRequest userRewards) throws InvalidRequestException {
         UserRewards userRewardsFromDB = getUserRewards(userId, battleId);
         userRewardsFromDB.setRank(userRewards.getRank());
         userRewardsFromDB.setScore(userRewards.getScore());

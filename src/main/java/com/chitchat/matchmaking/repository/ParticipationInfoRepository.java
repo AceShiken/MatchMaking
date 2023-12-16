@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface ParticipationInfoRepository extends MongoRepository<ParticipationInfo, Integer>,
         CrudRepository<ParticipationInfo, Integer>,
         PagingAndSortingRepository<ParticipationInfo, Integer>,

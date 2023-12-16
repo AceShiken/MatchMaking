@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface UserFraudRepository extends MongoRepository<UserFraud, Integer>,
         CrudRepository<UserFraud, Integer>,
         PagingAndSortingRepository<UserFraud, Integer>,

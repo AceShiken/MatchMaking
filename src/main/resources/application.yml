@@ -1,7 +1,7 @@
 spring:
   application:
     name: match-making
-# Mongo Config
+  # Mongo Config
   data:
     mongodb:
       host: localhost

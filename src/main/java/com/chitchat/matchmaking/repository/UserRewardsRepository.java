@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface UserRewardsRepository extends MongoRepository<UserRewards, Integer>,
         CrudRepository<UserRewards, Integer>,
         PagingAndSortingRepository<UserRewards, Integer>,

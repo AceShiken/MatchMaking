@@ -7,7 +7,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public interface GameRepository extends MongoRepository<Game, Integer>,
         CrudRepository<Game, Integer>,
         PagingAndSortingRepository<Game, Integer>,
