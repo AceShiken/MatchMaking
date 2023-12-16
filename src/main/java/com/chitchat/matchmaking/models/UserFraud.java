@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document
+@Document(collection = "user_fraud")
 public class UserFraud {
     @Indexed
     @MongoId

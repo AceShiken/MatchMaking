@@ -17,7 +17,7 @@ public class BattleDaoImpl implements BattleDao {
     @Override
     public List<Battle> getAllBattlesByGameId(int gameId) {
         Query query = new Query(Criteria.where("game_id").is(gameId));
-        battleRepository.find(Exa)
+//        battleRepository.find(Exa)
         return null;
     }
 }

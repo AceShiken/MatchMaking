@@ -1,7 +1,5 @@
 package com.chitchat.matchmaking.controller;
 
-import com.chitchat.matchmaking.dto.requests.JoinRequest;
-import com.chitchat.matchmaking.dto.response.JoinResponse;
 import com.chitchat.matchmaking.exceptions.InvalidRequestException;
 import com.chitchat.matchmaking.models.*;
 import com.chitchat.matchmaking.service.MatchMakingService;
