@@ -2,7 +2,8 @@ package com.chitchat.matchmaking.controller;
 
 import com.chitchat.matchmaking.exceptions.InvalidRequestException;
 import com.chitchat.matchmaking.models.*;
-import com.chitchat.matchmaking.service.MatchMakingService;
+import com.chitchat.matchmaking.service.BattleService;
+import com.chitchat.matchmaking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,75 +15,78 @@ import java.util.List;
 public class MatchMakingController {
 
     @Autowired
-    private MatchMakingService mmService;
+    private BattleService battleService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "/battles/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Battle getBattle(HttpHeaders headers,
                             @PathVariable int id) throws InvalidRequestException {
         String countryCode = headers.getFirst("countryCode");
-        return mmService.getBattle(id);
+        return battleService.getBattle(id);
     }
 
     @GetMapping(value = "/battles/all/{gameId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Battle> getAllBattles(HttpHeaders headers,
                                   @PathVariable int gameId) {
         String countryCode = headers.getFirst("countryCode");
-        return mmService.getAllBattles(gameId);
+        return battleService.getAllBattles(gameId);
     }
 
     @GetMapping(value = "/battles/{id}/participation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ParticipationInfo getBattleParticipationInfo(HttpHeaders headers,
-                                                        @PathVariable String id) {
+                                                        @PathVariable int id) throws InvalidRequestException {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return battleService.getBattleParticipationInfo(id);
     }
 
     @PostMapping(value = "/battles/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Battle createBattle(HttpHeaders headers, @RequestBody Battle battle) {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return battleService.createBattle(battle);
     }
 
     @PostMapping(value = "/battles/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Battle updateBattle(HttpHeaders headers, @RequestBody Battle battle) {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return battleService.updateBattle(battle);
     }
 
     @GetMapping(value = "/user/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public User getUser(HttpHeaders headers,
-                        @PathVariable String id) {
+                        @PathVariable int id) throws InvalidRequestException {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return userService.getUser(id);
     }
 
     @GetMapping(value = "/user/{id}/fraudInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserFraud getUserFraudInfo(HttpHeaders headers,
-                                      @PathVariable String id) {
+                                      @PathVariable int id) throws InvalidRequestException {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return userService.getUserFraudInfo(id);
     }
 
     @GetMapping(value = "/user/{id}/rewards/{battleId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserRewards getUserRewards(HttpHeaders headers,
-                                      @PathVariable String id,
-                                      @PathVariable String battleId) {
+                                      @PathVariable int id,
+                                      @PathVariable int battleId) throws InvalidRequestException {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return userService.getUserRewards(id, battleId);
     }
 
     @PostMapping(value = "/user/{id}/enterFraud", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserFraud enterFraud(HttpHeaders headers,
-                                @PathVariable String id,
+                                @PathVariable int id,
                                 @RequestBody UserFraud userFraud) {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return userService.enterFraud(id, userFraud);
     }
 
     @PostMapping(value = "/user/{id}/rewards/{battleId}/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserRewards updateUserRewards(HttpHeaders headers,
-                                         @PathVariable String id,
-                                         @PathVariable String battleId,
+                                         @PathVariable int id,
+                                         @PathVariable int battleId,
                                          @RequestBody UserRewards userRewards) {
         String countryCode = headers.getFirst("countryCode");
         return null;

@@ -7,5 +7,5 @@ import java.util.List;
 
 @Component
 public interface BattleDao {
-    List<Battle> getAllBattlesByGameId(int gameId);
+//    List<Battle> getAllBattlesByGameId(int gameId);
 }
