@@ -8,7 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.util.Date;
+import java.sql.Date;
+
 
 @Data
 @NoArgsConstructor
@@ -24,4 +25,10 @@ public class UserFraud {
     private int intensity;
     @Field(name = "uplift_time")
     private Date upliftTime;
+
+    public UserFraud(int userId, int intensity, Date upliftTime) {
+        this.userId = userId;
+        this.intensity = intensity;
+        this.upliftTime = upliftTime;
+    }
 }

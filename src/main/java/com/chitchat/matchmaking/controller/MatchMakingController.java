@@ -1,8 +1,10 @@
 package com.chitchat.matchmaking.controller;
 
+import com.chitchat.matchmaking.dto.requests.FraudIntensityRequest;
 import com.chitchat.matchmaking.exceptions.InvalidRequestException;
 import com.chitchat.matchmaking.models.*;
 import com.chitchat.matchmaking.service.BattleService;
+import com.chitchat.matchmaking.service.GameService;
 import com.chitchat.matchmaking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +21,9 @@ public class MatchMakingController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GameService gameService;
 
     @GetMapping(value = "/battles/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Battle getBattle(HttpHeaders headers,
@@ -78,42 +83,42 @@ public class MatchMakingController {
     @PostMapping(value = "/user/{id}/enterFraud", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserFraud enterFraud(HttpHeaders headers,
                                 @PathVariable int id,
-                                @RequestBody UserFraud userFraud) {
+                                @RequestBody FraudIntensityRequest fraudIntensityRequest) {
         String countryCode = headers.getFirst("countryCode");
-        return userService.enterFraud(id, userFraud);
+        return userService.enterFraud(id, fraudIntensityRequest);
     }
 
     @PostMapping(value = "/user/{id}/rewards/{battleId}/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserRewards updateUserRewards(HttpHeaders headers,
                                          @PathVariable int id,
                                          @PathVariable int battleId,
-                                         @RequestBody UserRewards userRewards) {
+                                         @RequestBody UserRewards userRewards) throws InvalidRequestException {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return userService.updateUserRewards(id, battleId, userRewards);
     }
 
     @GetMapping(value = "/games/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Game getGame(HttpHeaders headers,
-                        @PathVariable String id) {
+                        @PathVariable int id) throws InvalidRequestException {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return gameService.getGame(id);
     }
 
     @GetMapping(value = "/games/all", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Game> getAllGames(HttpHeaders headers) {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return gameService.getAllGames();
     }
 
     @PostMapping(value = "/games/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Game createGame(HttpHeaders headers, @RequestBody Game game) {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return gameService.createGame(game);
     }
 
     @PostMapping(value = "/games/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Game updateGame(HttpHeaders headers, @RequestBody Game game) {
         String countryCode = headers.getFirst("countryCode");
-        return null;
+        return gameService.updateGame(game);
     }
 }
