@@ -22,10 +22,16 @@ public class Battle {
     private int id;
     @Field(name = "name")
     private String name;
-    @Field(name = "is_tournament")
-    private boolean isTournament;
+    @Field(name = "is_1v1")
+    private boolean is1v1;
     @Field(name = "is_cross_lobby_enabled")
     private boolean isCrossLobbyEnabled;
+    @Field(name = "is_cross_geo_enabled")
+    private boolean isCrossGeoEnabled;
+    @Field(name = "entry_fees")
+    private double entryFees;
+    @Field(name = "entry_currency")
+    private String entryCurrency;
     @Field(name = "game_id")
     private int gameId;
     @Field(name = "buy_in")
@@ -44,4 +50,8 @@ public class Battle {
     private Date endTime;
     @Field(name = "ranked_rewards")
     private List<UserRewards> rankedRewards;
+    @Field(name = "eligible_x_min_lobby")
+    private double eligibleMinCrossLobby;
+    @Field(name = "eligible_x_max_lobby")
+    private double eligibleMaxCrossLobby;
 }
