@@ -2,10 +2,14 @@ package com.chitchat.matchmaking.service;
 
 import com.chitchat.matchmaking.dto.requests.FraudIntensityRequest;
 import com.chitchat.matchmaking.dto.requests.UpdateUserRewardsRequest;
+import com.chitchat.matchmaking.dto.requests.UserDto;
 import com.chitchat.matchmaking.exceptions.InvalidRequestException;
+import com.chitchat.matchmaking.mapper.DtoToEntityMapper;
 import com.chitchat.matchmaking.models.User;
+import com.chitchat.matchmaking.models.UserDevice;
 import com.chitchat.matchmaking.models.UserFraud;
 import com.chitchat.matchmaking.models.UserRewards;
+import com.chitchat.matchmaking.repository.UserDeviceRepository;
 import com.chitchat.matchmaking.repository.UserFraudRepository;
 import com.chitchat.matchmaking.repository.UserRepository;
 import com.chitchat.matchmaking.repository.UserRewardsRepository;
@@ -27,12 +31,23 @@ public class UserService {
     @Autowired
     private UserRewardsRepository rewardsRepository;
 
+    @Autowired
+    private UserDeviceRepository deviceRepository;
+
+    @Autowired
+    private DtoToEntityMapper dtoToEntityMapper;
+
     public User getUser(int id) throws InvalidRequestException {
         Optional<User> optionalUser = userRepository.findById(id);
         if(!optionalUser.isPresent()) {
             throw new InvalidRequestException("Invalid User Id");
         }
         return optionalUser.get();
+    }
+
+    public User createUser(UserDto userDto) {
+        User user = dtoToEntityMapper.convertToEntity(userDto);
+        return userRepository.insert(user);
     }
 
     public UserFraud getUserFraudInfo(int userId) throws InvalidRequestException {
@@ -63,5 +78,9 @@ public class UserService {
         userRewardsFromDB.setScore(userRewards.getScore());
         userRewardsFromDB.setWinnings(userRewards.getWinnings());
         return rewardsRepository.save(userRewardsFromDB);
+    }
+
+    public UserDevice insertDeviceDetails(int userId, String imei, Integer ramInGB, String os, String osVersion) {
+        return deviceRepository.insert(new UserDevice(userId, imei, ramInGB, os, osVersion));
     }
 }

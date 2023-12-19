@@ -26,4 +26,12 @@ public class UserDevice {
     private String OS;
     @Field(name = "os_version")
     private String OSVersion;
+
+    public UserDevice(int userId, String imei, Integer ramInGB, String OS, String OSVersion) {
+        this.userId = userId;
+        this.imei = imei;
+        this.ramInGB = ramInGB;
+        this.OS = OS;
+        this.OSVersion = OSVersion;
+    }
 }

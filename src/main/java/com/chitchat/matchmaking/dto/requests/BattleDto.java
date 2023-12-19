@@ -17,8 +17,14 @@ public class BattleDto {
     private int id;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("is_tournament")
-    private boolean isTournament;
+    @JsonProperty("is_1v1")
+    private boolean is1v1;
+    @JsonProperty("is_cross_geo_enabled")
+    private boolean isCrossGeoEnabled;
+    @JsonProperty("entry_fees")
+    private double entryFees;
+    @JsonProperty("entry_currency")
+    private String entryCurrency;
     @JsonProperty("is_cross_lobby_enabled")
     private boolean isCrossLobbyEnabled;
     @JsonProperty("game_id")
@@ -39,4 +45,8 @@ public class BattleDto {
     private Date endTime;
     @JsonProperty("ranked_rewards")
     private List<UserRewards> rankedRewards;
+    @JsonProperty("eligible_x_min_lobby")
+    private double eligibleMinCrossLobby;
+    @JsonProperty("eligible_x_max_lobby")
+    private double eligibleMaxCrossLobby;
 }

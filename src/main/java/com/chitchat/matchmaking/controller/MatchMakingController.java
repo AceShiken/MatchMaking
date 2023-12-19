@@ -1,9 +1,6 @@
 package com.chitchat.matchmaking.controller;
 
-import com.chitchat.matchmaking.dto.requests.BattleDto;
-import com.chitchat.matchmaking.dto.requests.FraudIntensityRequest;
-import com.chitchat.matchmaking.dto.requests.GameDto;
-import com.chitchat.matchmaking.dto.requests.UpdateUserRewardsRequest;
+import com.chitchat.matchmaking.dto.requests.*;
 import com.chitchat.matchmaking.exceptions.InvalidRequestException;
 import com.chitchat.matchmaking.models.*;
 import com.chitchat.matchmaking.service.BattleService;
@@ -21,6 +18,14 @@ import java.util.List;
 public class MatchMakingController {
 
     public static final String COUNTRY_CODE = "countrycode";
+
+    public static final String OS = "os";
+
+    public static final String IMEI = "imei";
+
+    public static final String OS_VERSION = "osversion";
+
+    public static final String RAM = "ram";
     @Autowired
     private BattleService battleService;
 
@@ -68,6 +73,18 @@ public class MatchMakingController {
                         @PathVariable int id) throws InvalidRequestException {
         String countryCode = headers.getFirst(COUNTRY_CODE);
         return userService.getUser(id);
+    }
+
+    @PostMapping(value = "/user/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public User createUser(@RequestHeader HttpHeaders headers,
+                           @RequestBody UserDto userDto) {
+        String countryCode = headers.getFirst(COUNTRY_CODE);
+        String imei = headers.getFirst(IMEI);
+        Integer ramInGB = Integer.valueOf(headers.getFirst(RAM));
+        String os = headers.getFirst(OS);
+        String osVersion = headers.getFirst(OS_VERSION);
+        userService.insertDeviceDetails(userDto.getId(), imei, ramInGB, os, osVersion);
+        return userService.createUser(userDto);
     }
 
     @GetMapping(value = "/user/{id}/fraudInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
