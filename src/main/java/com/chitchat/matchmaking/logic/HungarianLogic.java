@@ -16,7 +16,7 @@ public class HungarianLogic {
     Integer[][] matrix; // initial matrix (cost matrix)
 
     // markers in the matrix
-    int[] squareInRow, squareInCol, rowIsCovered, colIsCovered, staredZeroesInRow;
+    int[] squareInRow, squareInCol, rowIsCovered, colIsCovered, starredZeroesInRow;
 
     public HungarianLogic(double[] data) {
         int size = (int) Math.sqrt(2 * data.length);
@@ -37,8 +37,8 @@ public class HungarianLogic {
 
         rowIsCovered = new int[matrix.length];      // indicates whether a row is covered
         colIsCovered = new int[matrix[0].length];   // indicates whether a column is covered
-        staredZeroesInRow = new int[matrix.length]; // storage for the 0*
-        Arrays.fill(staredZeroesInRow, -1);
+        starredZeroesInRow = new int[matrix.length]; // storage for the 0*
+        Arrays.fill(starredZeroesInRow, -1);
         Arrays.fill(squareInRow, -1);
         Arrays.fill(squareInCol, -1);
     }
@@ -159,6 +159,11 @@ public class HungarianLogic {
                     colHasSquare[j] = 1;
                     squareInRow[i] = j; // save the row-position of the zero
                     squareInCol[j] = i; // save the column-position of the zero
+                    // Due to symmetric matrix
+                    rowHasSquare[j] = 1;
+                    colHasSquare[i] = 1;
+                    squareInRow[j] = i;
+                    squareInCol[i] = j;
                     continue; // jump to next row
                 }
             }
@@ -173,6 +178,9 @@ public class HungarianLogic {
         for (int i = 0; i < squareInCol.length; i++) {
             colIsCovered[i] = squareInCol[i] != -1 ? 1 : 0;
         }
+        for (int i = 0; i < squareInRow.length; i++) {
+            rowIsCovered[i] = squareInRow[i] != -1 ? 1 : 0;
+        }
     }
 
     /**
@@ -186,7 +194,7 @@ public class HungarianLogic {
             if (rowIsCovered[i] == 0) {
                 for (int j = 0; j < matrix[i].length; j++) {
                     if (matrix[i][j] == 0 && colIsCovered[j] == 0) {
-                        staredZeroesInRow[i] = j; // mark as 0*
+                        starredZeroesInRow[i] = j; // mark as 0*
                         return new int[]{i, j};
                     }
                 }
@@ -229,7 +237,7 @@ public class HungarianLogic {
             // (c)
             // replace Z_0 with the 0* in the row of Z_1
             i = squareInCol[j];
-            j = staredZeroesInRow[i];
+            j = starredZeroesInRow[i];
             // add the new Z_0 to K
             if (j != -1) {
                 K.add(new int[]{i, j});
@@ -248,7 +256,7 @@ public class HungarianLogic {
                 squareInRow[zero[0]] = -1;
             }
             // replace the 0* marks in K with "square" marks
-            if (staredZeroesInRow[zero[0]] == zero[1]) {
+            if (starredZeroesInRow[zero[0]] == zero[1]) {
                 squareInRow[zero[0]] = zero[1];
                 squareInCol[zero[1]] = zero[0];
             }
@@ -256,7 +264,7 @@ public class HungarianLogic {
 
         // (f)
         // remove all marks
-        Arrays.fill(staredZeroesInRow, -1);
+        Arrays.fill(starredZeroesInRow, -1);
         Arrays.fill(rowIsCovered, 0);
         Arrays.fill(colIsCovered, 0);
     }
