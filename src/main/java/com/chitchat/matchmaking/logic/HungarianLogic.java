@@ -13,6 +13,7 @@ import java.util.*;
 @Slf4j
 public class HungarianLogic {
 
+    public static final int SKIP = 100000;
     Integer[][] matrix; // initial matrix (cost matrix)
 
     // markers in the matrix
@@ -22,7 +23,7 @@ public class HungarianLogic {
         int size = (int) Math.sqrt(2 * data.length);
         double[][] symmetricMatrix = createSymmetricMatrix(data, size);
         matrix = updateMatrix(symmetricMatrix);
-        printMatrix(matrix);
+//        printMatrix(matrix);
         if (matrix.length != matrix[0].length) {
             try {
                 throw new IllegalAccessException("The matrix is not square!");
@@ -315,7 +316,7 @@ public class HungarianLogic {
         }
 
         for (int i = 0; i < matrix.length; i++) {
-            updatedMatrix[i][i] = 10000;
+            updatedMatrix[i][i] = SKIP;
         }
 
         return updatedMatrix;
