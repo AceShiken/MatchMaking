@@ -53,6 +53,7 @@ public class HungarianLogic {
         step1();    // reduce matrix
         step2();    // mark independent zeroes
         step3();    // cover columns which contain a marked zero
+//        printMatrix(matrix);
 
         while (!allColumnsAreCovered()) {
             int[] mainZero = step4();
@@ -309,15 +310,23 @@ public class HungarianLogic {
 
         // Update each element in the matrix
         Integer[][] updatedMatrix = new Integer[matrix.length][matrix.length];
+        int min = Integer.MAX_VALUE;
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
-                updatedMatrix[i][j] =  (int)(-100 * matrix[i][j]);
+                updatedMatrix[i][j] =  (int)(-100 * Math.max(matrix[i][j],-1000));
+                min = Math.min(updatedMatrix[i][j], min);
             }
         }
 
         for (int i = 0; i < matrix.length; i++) {
             updatedMatrix[i][i] = SKIP;
         }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                updatedMatrix[i][j] = updatedMatrix[i][j] - min;
+            }
+        }
+
 
         return updatedMatrix;
     }
@@ -341,5 +350,6 @@ public class HungarianLogic {
         for (Integer[] m : matrix) {
             System.out.println(Arrays.toString(m));
         }
+        System.out.println("_____________________________________________");
     }
 }
