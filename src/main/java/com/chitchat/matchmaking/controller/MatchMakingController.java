@@ -1,6 +1,7 @@
 package com.chitchat.matchmaking.controller;
 
 import com.chitchat.matchmaking.dto.requests.*;
+import com.chitchat.matchmaking.dto.response.JoinBattleResponse;
 import com.chitchat.matchmaking.exceptions.InvalidRequestException;
 import com.chitchat.matchmaking.models.*;
 import com.chitchat.matchmaking.service.BattleService;
@@ -66,6 +67,12 @@ public class MatchMakingController {
     public Battle updateBattle(@RequestHeader HttpHeaders headers, @RequestBody BattleDto battle) {
         String countryCode = headers.getFirst(COUNTRY_CODE);
         return battleService.updateBattle(battle);
+    }
+
+    @PostMapping(value = "/battles/join", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public JoinBattleResponse joinBattle(@RequestHeader HttpHeaders headers, @RequestBody JoinBattleRequest joinBattleRequest) {
+        String countryCode = headers.getFirst(COUNTRY_CODE);
+        return battleService.joinBattle(joinBattleRequest);
     }
 
     @GetMapping(value = "/user/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
