@@ -1,9 +1,12 @@
 package com.chitchat.matchmaking.logic;
 
 import javafx.util.Pair;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+
+import static com.chitchat.matchmaking.utils.ArrayOperationsUtils.*;
 
 /**
  * An implemetation of the Kuhn–Munkres assignment algorithm of the year 1957.
@@ -16,14 +19,42 @@ public class HungarianLogic {
     public static final int SKIP = 100000;
     Integer[][] matrix; // initial matrix (cost matrix)
 
+    @Getter
+    double[][] inputMatrix;
+
     // markers in the matrix
     int[] squareInRow, squareInCol, rowIsCovered, colIsCovered, starredZeroesInRow;
 
+    public HungarianLogic(double[][] data) {
+        int size = (int) Math.sqrt(2 * data.length);
+        inputMatrix = data;
+        matrix = updateMatrix(inputMatrix);
+        printMatrix(matrix);
+        if (matrix.length != matrix[0].length) {
+            try {
+                throw new IllegalAccessException("The matrix is not square!");
+            } catch (IllegalAccessException ex) {
+                System.err.println(ex);
+                System.exit(1);
+            }
+        }
+
+        squareInRow = new int[matrix.length];       // squareInRow & squareInCol indicate the position
+        squareInCol = new int[matrix[0].length];    // of the marked zeroes
+
+        rowIsCovered = new int[matrix.length];      // indicates whether a row is covered
+        colIsCovered = new int[matrix[0].length];   // indicates whether a column is covered
+        starredZeroesInRow = new int[matrix.length]; // storage for the 0*
+        Arrays.fill(starredZeroesInRow, -1);
+        Arrays.fill(squareInRow, -1);
+        Arrays.fill(squareInCol, -1);
+    }
+
     public HungarianLogic(double[] data) {
         int size = (int) Math.sqrt(2 * data.length);
-        double[][] symmetricMatrix = createSymmetricMatrix(data, size);
-        matrix = updateMatrix(symmetricMatrix);
-//        printMatrix(matrix);
+        inputMatrix = createSymmetricMatrix(data, size);
+        matrix = updateMatrix(inputMatrix);
+        printMatrix(matrix);
         if (matrix.length != matrix[0].length) {
             try {
                 throw new IllegalAccessException("The matrix is not square!");
@@ -49,7 +80,7 @@ public class HungarianLogic {
      *
      * @return optimal assignment
      */
-    public List<Pair<Integer, Integer>> findOptimalAssignment() {
+    public Pair<Map<Integer, Integer>,Map<Integer, Double>>  findOptimalAssignment() {
         step1();    // reduce matrix
         step2();    // mark independent zeroes
         step3();    // cover columns which contain a marked zero
@@ -80,7 +111,8 @@ public class HungarianLogic {
         }
         List<Pair<Integer, Integer>> result = new ArrayList<>();
         for (Integer[] assigned : optimalAssignment) {
-            if(!(result.contains(new Pair<>(assigned[1], assigned[0])) || result.contains(new Pair<>(assigned[0], assigned[1])))) {
+            if(!(result.contains(new Pair<>(assigned[1], assigned[0])) || result.contains(new Pair<>(assigned[0], assigned[1]))) &&
+                    inputMatrix[assigned[0]][assigned[1]] > 0) {
                 if(assigned[0]>assigned[1]) {
                     result.add(new Pair<>(assigned[1], assigned[0]));
                 } else {
@@ -89,7 +121,7 @@ public class HungarianLogic {
             }
         }
         result.sort(Comparator.comparingInt((Pair<Integer, Integer> e) -> e.getKey()).thenComparingInt(Pair::getValue));
-        return result;
+        return selectBestPair(result);
     }
 
     /**
@@ -306,50 +338,59 @@ public class HungarianLogic {
         }
     }
 
-    private static Integer[][] updateMatrix(double[][] matrix) {
+    private Pair<Map<Integer, Integer>,Map<Integer, Double>> selectBestPair(List<Pair<Integer, Integer>> result) {
+        // Map to store the best scores for each column
+        Map<Integer, Double> bestScores = new HashMap<>();
 
-        // Update each element in the matrix
-        Integer[][] updatedMatrix = new Integer[matrix.length][matrix.length];
-        int min = Integer.MAX_VALUE;
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                updatedMatrix[i][j] =  (int)(-100 * Math.max(matrix[i][j],-1000));
-                min = Math.min(updatedMatrix[i][j], min);
+        // Map to store the selected pairs
+        Map<Integer, Integer> selectedPairs = new HashMap<>();
+
+        // Process the input data
+        for (Pair<Integer, Integer> colRow : result) {
+
+            int col = colRow.getKey();
+            int row = colRow.getValue();
+            double score = inputMatrix[colRow.getKey()][colRow.getValue()];
+
+            // Check if the current pair has a better score than the existing best for the column
+            if (!bestScores.containsKey(col) || score > bestScores.get(col)) {
+                boolean isEligiblePair = true;
+                if(selectedPairs.containsValue(col)) {
+                    int prevSelectedKey = 0;
+                    for(int key : selectedPairs.keySet()) {
+                        if(selectedPairs.get(key) == col) {
+                            prevSelectedKey = key;
+                            break;
+                        }
+                    }
+                    if(bestScores.get(prevSelectedKey) <= score) {
+                        bestScores.remove(prevSelectedKey);
+                        selectedPairs.remove(prevSelectedKey);
+                    } else {
+                        isEligiblePair = false;
+                    }
+                } else if(selectedPairs.containsValue(row)) {
+                    int prevSelectedKey = 0;
+                    for(int key : selectedPairs.keySet()) {
+                        if(selectedPairs.get(key) == row) {
+                            prevSelectedKey = key;
+                            break;
+                        }
+                    }
+                    if(bestScores.get(prevSelectedKey) <= score) {
+                        bestScores.remove(prevSelectedKey);
+                        selectedPairs.remove(prevSelectedKey);
+                    } else {
+                        isEligiblePair = false;
+                    }
+                }
+                if(isEligiblePair) {
+                    bestScores.put(col, score);
+                    selectedPairs.put(col, row);
+                }
             }
+
         }
-
-        for (int i = 0; i < matrix.length; i++) {
-            updatedMatrix[i][i] = SKIP;
-        }
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                updatedMatrix[i][j] = updatedMatrix[i][j] - min;
-            }
-        }
-
-
-        return updatedMatrix;
-    }
-
-    private static double[][] createSymmetricMatrix(double[] data, int size) {
-        double[][] matrix = new double[size][size];
-
-        int k = 0;
-        for (int i = 0; i < size; i++) {
-            for (int j = i; j < size; j++) {
-                matrix[i][j] = data[k];
-                matrix[j][i] = data[k]; // Symmetric element
-                k++;
-            }
-        }
-
-        return matrix;
-    }
-
-    private static void printMatrix(Integer[][] matrix) {
-        for (Integer[] m : matrix) {
-            System.out.println(Arrays.toString(m));
-        }
-        System.out.println("_____________________________________________");
+        return new Pair<>(selectedPairs, bestScores);
     }
 }
