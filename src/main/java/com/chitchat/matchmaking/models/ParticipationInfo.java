@@ -21,11 +21,13 @@ public class ParticipationInfo {
     @Id
     private int id;
     @Field(name = "registered_users")
-    private List<String> registeredUsers;
+    private List<Integer> registeredUsers;
     @Field(name = "battle_id")
-    private String battleId;
+    private int battleId;
     @Field(name = "registration_start_time")
     private Date registrationStartTime;
     @Field(name = "registration_end_time")
     private Date registrationEndTime;
+    @Field(name = "is_processed")
+    private boolean isProcessed;
 }
